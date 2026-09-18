@@ -1,0 +1,109 @@
+<app-navbar></app-navbar>
+
+<div class="user-list-container">
+  <div class="header">
+    <h1>User Management</h1>
+    <div class="header-actions">
+      <input
+        type="text"
+        placeholder="Search for a user..."
+        [(ngModel)]="searchTerm"
+        class="search-input"
+      />
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Loading users...</p>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="error-message">
+      {{ errorMessage() }}
+    </div>
+  } @else {
+    <div class="users-table">
+      <div class="users-table-scroll">
+        <table>
+          <thead>
+          <tr>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (user of paginatedUsers(); track user.id) {
+              <tr>
+                <td>{{ user.firstName }}</td>
+                <td>{{ user.lastName }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                <span class="role-badge">
+                  {{ getRoleNames(user) }}
+                </span>
+                </td>
+                <td>
+                <span
+                  class="status-badge"
+                  [class.active]="user.active"
+                  [class.inactive]="!user.active"
+                >
+                  {{ user.active ? 'Active' : 'Inactive' }}
+                </span>
+                </td>
+                <td class="actions">
+                  <button
+                    (click)="viewUser(user.id)"
+                    class="btn btn-view"
+                    title="View"
+                  >
+                    👁️
+                  </button>
+
+                  <button
+                    (click)="deleteUser(user.id)"
+                    class="btn btn-delete"
+                    title="Delete"
+                    [disabled]="isAdmin(user)"
+                    [class.disabled]="isAdmin(user)"
+                  >
+                    🗑️
+                  </button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="7" class="no-data">
+                  No users found
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="summary">
+        Total: {{ filteredUsers.length }} user(s)
+      </div>
+    </div>
+
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage() === 1">Previous</button>
+        <div class="pagination-pages">
+          @for (page of pageNumbers(); track page) {
+            <button class="pagination-page" [class.active]="page === currentPage()" (click)="goToPage(page)">
+              {{ page }}
+            </button>
+          }
+        </div>
+        <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage() === totalPages()">Next</button>
+      </div>
+    }
+  }
+</div>

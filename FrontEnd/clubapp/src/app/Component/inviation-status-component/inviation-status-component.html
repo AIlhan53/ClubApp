@@ -1,0 +1,40 @@
+<div class="result-container">
+  <div class="result-card">
+
+    @if (isAccepted()) {
+      <div class="icon-circle success">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="3">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <h1>Invitation accepted</h1>
+      <p>You're all set. You've been added to the tournament roster.</p>
+    }
+
+    @if (isDeclined()) {
+      <div class="icon-circle declined">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="3">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </div>
+      <h1>Invitation declined</h1>
+      <p>You won't be taking part in this tournament. No further action is needed.</p>
+    }
+
+    @if (!isAccepted() && !isDeclined()) {
+      <div class="icon-circle unknown">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+      <h1>Something went wrong</h1>
+      <p>We couldn't read this invitation link. It may be invalid or already used.</p>
+    }
+  </div>
+</div>

@@ -1,0 +1,545 @@
+* {
+  font-family: "Poppins", Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.stores-container {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: calc(100vh - 70px);
+  padding: 2rem;
+}
+
+/* Page Header */
+.page-header {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.page-header h1 {
+  font-size: 2.2rem;
+  color: #333;
+  margin: 0 0 0.5rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Loading State */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: #666;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #e0e0e0;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error & Empty States */
+.error-state,
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 16px;
+  max-width: 500px;
+  margin: 0 auto;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.error-state {
+  color: #d32f2f;
+}
+
+.error-state svg,
+.empty-state svg {
+  margin-bottom: 1.5rem;
+  color: #ccc;
+}
+
+.empty-state h3 {
+  margin: 0 0 0.5rem;
+  color: #333;
+  font-size: 1.4rem;
+}
+
+.empty-state p {
+  margin: 0;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* Stores Grid */
+.stores-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Store Card */
+.store-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border: 2px solid transparent;
+}
+
+.store-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.store-card.subscribed {
+  border-color: #4caf50;
+}
+
+/* Subscribed Badge */
+.subscribed-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
+  color: white;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* Store Header */
+.store-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid #eee;
+}
+
+.store-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.store-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.store-logo.placeholder {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.store-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.store-info h3 {
+  margin: 0 0 0.25rem;
+  color: #333;
+  font-size: 1.15rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.store-address {
+  margin: 0;
+  color: #999;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.store-address svg {
+  flex-shrink: 0;
+}
+
+/* Offer Section */
+.offer-section {
+  flex: 1;
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.offer-header {
+  margin-bottom: 1rem;
+}
+
+.offer-badge {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.offer-badge.free {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.offer-badge.discount {
+  background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);
+  color: white;
+}
+
+.offer-details {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.offer-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.offer-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.offer-label {
+  font-size: 0.75rem;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.offer-description {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* No Offer */
+.no-offer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2rem;
+  background: #f9f9f9;
+  border-radius: 12px;
+  color: #999;
+  margin-bottom: 1rem;
+}
+
+.no-offer span {
+  font-size: 0.9rem;
+}
+btn{
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+/* Subscribe Button */
+.btn-subscribe {
+  padding: 0.85rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 50%;
+}
+
+.btn-tournament {
+  padding: 0.85rem 1.5rem;
+  background: linear-gradient(135deg, #a79048 0%, #bc4378 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 50%;
+}
+
+.btn-subscribe:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-subscribe.subscribed {
+  background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+}
+
+.btn-subscribe.subscribed:hover {
+  box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+}
+/* PREMIUM GOLD - Élégant et subtil */
+.store-card.advertising {
+  /* Limiter à 2 colonnes et forcer au début */
+  grid-column: 1 / span 2;
+  margin-bottom: 1rem;
+
+  /* Hauteur réduite - pas de scale */
+  background: linear-gradient(135deg, #fffdf8 0%, #fef7e0 100%);
+  border: 3px solid rgba(255, 215, 0, 0.2);
+  box-shadow:
+    0 12px 40px rgba(255, 215, 0, 0.2),
+    0 0 0 3px rgba(255, 215, 0, 0.1),
+    inset 0 2px 10px rgba(255, 255, 255, 0.9);
+  z-index: 10;
+  transition: all 0.5s ease;
+  padding: 0.5rem !important;
+}
+
+/* Forcer les autres magasins à la ligne suivante */
+.store-card.advertising + .store-card {
+  grid-column: 1;
+}
+
+.store-card:not(.advertising) {
+  /* Style par défaut */
+}
+
+/* Halo OR flottant */
+.store-card.advertising::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, transparent 70%);
+  border-radius: 20px;
+  z-index: -1;
+  animation: goldHalo 3s ease-in-out infinite;
+}
+
+@keyframes goldHalo {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+/* Hover = ÉCLAT */
+.store-card.advertising:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 20px 60px rgba(255, 215, 0, 0.35),
+    0 0 0 4px rgba(255, 215, 0, 0.2);
+}
+
+/* Texte OR */
+.store-card.advertising .store-info h3 {
+  color: #D4AF37 !important;
+  text-shadow: 0 2px 4px rgba(212, 175, 55, 0.3);
+}
+
+/* Bouton OR spécial */
+.store-card.advertising .btn-subscribe {
+  background: linear-gradient(135deg, #D4AF37, #FAD5A5) !important;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+}
+
+.store-card.advertising .btn-subscribe:hover {
+  box-shadow: 0 6px 25px rgba(212, 175, 55, 0.6);
+}
+
+/* Badge PREMIUM */
+.advertising-badge {
+  background: linear-gradient(45deg, #D4AF37, #FAD5A5);
+  color: #8B6914;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  box-shadow:
+    0 4px 12px rgba(212, 175, 55, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  animation: premiumPulse 2s ease-in-out infinite;
+}
+
+@keyframes premiumPulse {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
+    transform: scale(1.02);
+  }
+}
+
+
+/* ===== Pagination ===== */
+.pagination {
+  max-width: 1200px;
+  margin: 1.5rem auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.pagination-btn {
+  padding: 0.6rem 1.2rem;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-weight: 600;
+  color: #667eea;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: transparent;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pagination-pages {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.pagination-page {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background: white;
+  color: #333;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-page:hover {
+  border-color: #667eea;
+}
+
+.pagination-page.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: transparent;
+}
+
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .stores-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .stores-container {
+    padding: 1rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .stores-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .store-card {
+    padding: 1.25rem;
+  }
+
+  .offer-details {
+    gap: 1.5rem;
+  }
+
+  .offer-value {
+    font-size: 1.3rem;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .stores-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .store-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .store-address {
+    justify-content: center;
+  }
+
+  .subscribed-badge {
+    position: static;
+    margin-bottom: 1rem;
+    align-self: center;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+  }
+}

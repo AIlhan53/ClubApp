@@ -1,0 +1,113 @@
+<app-navbar></app-navbar>
+
+<div class="tournaments-container">
+  <div class="tournaments-header">
+    <h2>Tournament of this club</h2>
+    <div class="header-actions">
+      <button class="btn-create" [routerLink]="['/responsable/club', clubId, 'addTournament']">
+        Create Tournament
+      </button>
+      <button class="btn-back" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back to Dashboard
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading subscribers...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error() && !loading()) {
+    <div class="error-state">
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <p>{{ error() }}</p>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!loading() && !error() && tournaments.length === 0) {
+    <div class="empty-state">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.5">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+      <h3>No tournament</h3>
+    </div>
+  }
+
+  <!-- Tournaments List -->
+  @if (!loading() && !error() && tournaments.length > 0) {
+    <div class="tournaments-content">
+      <div class="stats-bar">
+        <div class="stat">
+          <span class="stat-number">{{ tournaments.length }}</span>
+          <span class="stat-label">Active Tournaments</span>
+        </div>
+      </div>
+
+      <div class="tournaments-list-scroll">
+        <div class="tournaments-list">
+          @for (tournament of paginatedTournaments(); track tournament.id) {
+            <div class="tournament-card"
+                 [routerLink]="['/responsable/club',clubId, 'tournament',tournament.id,'invitations']">
+              <div class="tournament-avatar">
+                {{ tournament.tournamentName.charAt(0) }}
+              </div>
+
+              <div class="tournament-info">
+                <h3>{{ tournament.tournamentName }}</h3>
+                <p>{{ tournament.tournamentDescription }}</p>
+                <span>Date : {{ tournament.tournamentDate }}</span>
+                <span>Players : {{ tournament.playerCount }}</span>
+              </div>
+              <button class="btn-cancel" (click)="deleteTournament(tournament.id); $event.stopPropagation()">
+                Delete Tournament
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      @if (totalPages() > 1) {
+        <div class="pagination">
+          <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage() === 1">
+            Previous
+          </button>
+
+          <div class="pagination-pages">
+            @for (page of pageNumbers(); track page) {
+              <button
+                class="pagination-page"
+                [class.active]="page === currentPage()"
+                (click)="goToPage(page)">
+                {{ page }}
+              </button>
+            }
+          </div>
+
+          <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage() === totalPages()">
+            Next
+          </button>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # ============================================
+  # MailHog - Email Testing Tool
+  # ============================================
+  # MailHog is a fake SMTP server for development
+  # All emails sent to it are captured and viewable in the web UI
+  #
+  # SMTP Server: localhost:1025
+  # Web Interface: http://localhost:8025
+  # ============================================
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: clubapp-mailhog
+    ports:
+      - "1025:1025"  # SMTP server - Spring Boot sends emails here
+      - "8025:8025"  # Web interface - View captured emails here
+    restart: unless-stopped
+
+# ============================================
+# USAGE:
+# ============================================
+# 1. Start MailHog:
+#    docker-compose -f docker-compose-mailhog.yml up -d
+#
+# 2. Or run standalone:
+#    docker run -d -p 1025:1025 -p 8025:8025 --name mailhog mailhog/mailhog
+#
+# 3. View emails at: http://localhost:8025
+#
+# 4. Stop MailHog:
+#    docker-compose -f docker-compose-mailhog.yml down
+# ============================================
+
+# Run with: docker-compose up -d mailhog
+# Or standalone: docker run -d -p 1025:1025 -p 8025:8025 mailhog/mailhog
+#
+# Access MailHog web interface at: http://localhost:8025

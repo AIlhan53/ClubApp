@@ -1,0 +1,120 @@
+<app-navbar></app-navbar>
+<div class="rgpd-container">
+  <div class="header">
+
+    <button class="btn-back" (click)="goBack()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      Back to Dashboard
+    </button>
+
+    <h1>Invitation requests</h1>
+    <div class="filter-buttons">
+      <button
+        (click)="onFilterChange('ALL')"
+        [class.active]="filterStatus() === 'ALL'"
+        class="filter-btn"
+      >
+        All
+      </button>
+      <button
+        (click)="onFilterChange('PENDING')"
+        [class.active]="filterStatus() === 'PENDING'"
+        class="filter-btn pending"
+      >
+        PENDING
+      </button>
+      <button
+        (click)="onFilterChange('ACCEPTED')"
+        [class.active]="filterStatus() === 'ACCEPTED'"
+        class="filter-btn approved"
+      >
+        ACCEPTED
+      </button>
+      <button
+        (click)="onFilterChange('DECLINED')"
+        [class.active]="filterStatus() === 'DECLINED'"
+        class="filter-btn rejected"
+      >
+        DECLINED
+      </button>
+      <button
+        (click)="onFilterChange('CANCELLED')"
+        [class.active]="filterStatus() === 'CANCELLED'"
+        class="filter-btn"
+      >
+        CANCELLED
+      </button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Loading requests...</p>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="error-message">
+      {{ errorMessage() }}
+    </div>
+  } @else {
+    <div class="requests-table">
+      <div class="requests-table-scroll">
+        <table>
+          <thead>
+          <tr>
+            <th>Tournament Name</th>
+            <th>Tournament Description</th>
+            <th>User</th>
+            <th>Status</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (request of filteredRequests(); track request.id) {
+              <tr>
+                <td data-label="Name">
+                  <div class="name">
+                    {{ request.tournamentName}}
+                  </div>
+                </td>
+                <td data-label="Description">
+                  <div class="description">
+                    {{ request.tournamentDescription}}
+                  </div>
+                </td>
+                <td data-label="User">
+                  <div class="user-info">
+                    {{ request.firstNameMember }}
+                    {{ request.lastNameMember }}
+                  </div>
+                </td>
+                <td data-label="Status">
+                  <span
+                    class="status-badge"
+                    [class.pending]="request.invitationStatus === 'PENDING'"
+                    [class.approved]="request.invitationStatus === 'ACCEPTED'"
+                    [class.rejected]="request.invitationStatus === 'DECLINED'"
+                  >
+                    {{ getStatusLabel(request.invitationStatus) }}
+                  </span>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="6" class="no-data">
+                  No invitation found
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="summary">
+      Total: {{ filteredRequests().length }} request(s)
+    </div>
+  }
+</div>

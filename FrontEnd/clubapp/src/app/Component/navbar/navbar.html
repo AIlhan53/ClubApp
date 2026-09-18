@@ -1,0 +1,96 @@
+@if (isAuthenticated && currentRole) {
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">
+        <h1>ClubApp</h1>
+        <span class="user-info">{{ userName }} ({{ currentRole }})</span>
+      </div>
+
+      <button class="menu-toggle" (click)="toggleMenu()" [class.active]="isMenuOpen">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <ul class="nav-menu" [class.active]="isMenuOpen">
+
+        <li class="nav-item">
+          <a routerLink="/dashboard" routerLinkActive="active" (click)="closeMenu()" class="nav-link">
+            Main Menu
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a routerLink="/my-clubs" routerLinkActive="active" (click)="closeMenu()" class="nav-link">
+            Clubs joined
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a routerLink="/list-tournaments" routerLinkActive="active" (click)="closeMenu()" class="nav-link">
+            Tournaments
+          </a>
+        </li>
+
+        <!-- ================== ADMIN VIEW ================== -->
+        @if (currentRole === RoleTypeEnum.ADMIN) {
+          <ng-container>
+            <li class="nav-item">
+              <a routerLink="/admin/users" routerLinkActive="active" (click)="closeMenu()" class="nav-link">
+                Manage Users
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a routerLink="/responsable/dashboard" routerLinkActive="active" (click)="closeMenu()" class="nav-link">
+                Club Dashboard
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a routerLink="/profile-user" routerLinkActive="active" (click)="closeMenu()" class="nav-link">
+                My Profile
+              </a>
+            </li>
+
+          </ng-container>
+        }
+        <!-- ================== MANAGER VIEW ================== -->
+        @if (currentRole === RoleTypeEnum.RESPONSABLE) {
+          <ng-container>
+            <li class="nav-item">
+              <a routerLink="/responsable/dashboard" routerLinkActive="active" (click)="closeMenu()" class="nav-link">
+                Club Dashboard
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a routerLink="/profile-user" routerLinkActive="active" (click)="closeMenu()" class="nav-link">
+                My Profile
+              </a>
+            </li>
+          </ng-container>
+        }
+        <!-- ================== MEMBER VIEW ================== -->
+        @if (currentRole === RoleTypeEnum.MEMBRE) {
+          <ng-container>
+            <li class="nav-item">
+              <a routerLink="/profile-user" routerLinkActive="active" (click)="closeMenu()" class="nav-link">
+                My Profile
+              </a>
+            </li>
+          </ng-container>
+        }
+
+        <!-- ================== LOGOUT ================== -->
+        <li class="nav-item">
+          <button class="nav-link logout-btn" (click)="logout()">
+            Logout
+          </button>
+        </li>
+
+      </ul>
+    </div>
+  </nav>
+}
+

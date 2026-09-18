@@ -1,0 +1,97 @@
+<app-navbar></app-navbar>
+
+<div class="form-container">
+  <div class="form-content">
+    <h2>{{ isEditMode() ? 'Edit Store' : 'Add a New Store' }}</h2>
+
+    @if (error()) {
+      <div class="alert alert-error">
+        {{ error() }}
+      </div>
+    }
+    @if (success()) {
+      <div class="alert alert-success">
+        {{ success() }}
+      </div>
+    }
+
+    @if (loading()) {
+      <div class="loading">
+        <p>Loading...</p>
+      </div>
+    }
+    @if (!loading()) {
+      <form [formGroup]="tournamentForm" (ngSubmit)="saveTournament()" class="magasin-form">
+
+        <!-- Tournament Information -->
+        <div class="form-section">
+          <h3>General Information</h3>
+
+          <div class="form-group">
+            <label for="name">Tournament Name *</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              formControlName="tournamentName"
+              placeholder="Kaiser reign"
+              class="form-control"
+              [class.error]="tournamentForm.get('tournamentName')?.invalid && tournamentForm.get('tournamentName')?.touched"/>
+
+            @if (tournamentForm.get('tournamentName')?.invalid && tournamentForm.get('tournamentName')?.touched) {
+              <span class="error-text"></span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="name">Tournament Description *</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              formControlName="tournamentDescription"
+              placeholder="Kaiser reign"
+              class="form-control"
+              [class.error]="tournamentForm.get('tournamentDescription')?.invalid && tournamentForm.get('tournamentDescription')?.touched"/>
+
+            @if (tournamentForm.get('tournamentDescription')?.invalid && tournamentForm.get('tournamentDescription')?.touched) {
+              <span class="error-text"></span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="tournamentDate">Tournament Date *</label>
+            <input
+              type="datetime-local"
+              id="tournamentDate"
+              formControlName="tournamentDate"
+              [min]="minDate"
+              class="form-control"
+              [class.error]="tournamentForm.get('tournamentDate')?.invalid &&
+                     tournamentForm.get('tournamentDate')?.touched"/>
+
+            @if (tournamentForm.get('tournamentDate')?.invalid &&
+            tournamentForm.get('tournamentDate')?.touched) {
+              <span class="error-text">
+                Tournament date is required.
+              </span>
+            }
+          </div>
+
+        </div>
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" [disabled]="tournamentForm.invalid || loading()">
+            {{ isEditMode() ? '✏️ Update' : '➕ Create Tournament' }}
+          </button>
+          <button type="button" (click)="reset()" class="btn btn-secondary">
+            🔄 Reset
+          </button>
+          <button type="button" (click)="cancel()" class="btn btn-cancel">
+            ❌ Cancel
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+</div>

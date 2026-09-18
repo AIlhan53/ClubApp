@@ -1,0 +1,109 @@
+* {
+  font-family: "Poppins", Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.result-container {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.result-card {
+  background: white;
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+  animation: fadeInUp 0.4s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.icon-circle {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.75rem;
+}
+
+.icon-circle.success {
+  background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
+  color: white;
+  box-shadow: 0 8px 24px rgba(76, 175, 80, 0.35);
+}
+
+.icon-circle.declined {
+  background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+  color: white;
+  box-shadow: 0 8px 24px rgba(244, 67, 54, 0.3);
+}
+
+.icon-circle.unknown {
+  background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);
+  color: white;
+  box-shadow: 0 8px 24px rgba(255, 152, 0, 0.3);
+}
+
+.result-card h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 0.75rem;
+}
+
+.result-card p {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0 0 2rem;
+}
+
+.btn-dashboard {
+  padding: 0.85rem 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-dashboard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+@media (max-width: 480px) {
+  .result-card {
+    padding: 2.5rem 1.75rem;
+  }
+
+  .icon-circle {
+    width: 70px;
+    height: 70px;
+  }
+
+  .result-card h1 {
+    font-size: 1.3rem;
+  }
+}

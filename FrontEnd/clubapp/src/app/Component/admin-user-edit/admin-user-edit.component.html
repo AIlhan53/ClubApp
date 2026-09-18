@@ -1,0 +1,261 @@
+<app-navbar></app-navbar>
+<div class="profile-container">
+  <div class="profile-card">
+    <div class="profile-header">
+      <button class="btn-back" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back
+      </button>
+
+      <div class="header-title">
+        <div class="avatar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.5">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <div class="title-text">
+          <h1>User Profile</h1>
+          <span class="admin-badge">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            Admin View
+          </span>
+        </div>
+      </div>
+      @if (!editing()) {
+        <button
+          (click)="toggleEdit()"
+          class="btn btn-edit"
+          [disabled]="!canEditUser()"
+          [class.disabled]="!canEditUser()"
+          title="You cannot edit another administrator">
+
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          Edit
+        </button>
+      }
+    </div>
+
+    @if (loading()) {
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+      </div>
+    } @else {
+
+      @if (successMessage()) {
+        <div class="alert alert-success">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+          {{ successMessage() }}
+        </div>
+      }
+
+      @if (errorMessage()) {
+        <div class="alert alert-error">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            @if (editing()) {
+              <input
+                id="firstName"
+                type="text"
+                formControlName="firstName"
+                placeholder="Enter first name"
+                [class.error]="userForm.get('firstName')?.invalid && userForm.get('firstName')?.touched"
+              />
+              @if (userForm.get('firstName')?.invalid && userForm.get('firstName')?.touched) {
+                <span class="error-text">Firstname is required</span>
+              }
+            } @else {
+              <p class="readonly-field">{{ currentUser()?.firstName }}</p>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            @if (editing()) {
+              <input
+                id="lastName"
+                type="text"
+                formControlName="lastName"
+                placeholder="Enter last name"
+                [class.error]="userForm.get('lastName')?.invalid && userForm.get('lastName')?.touched"
+              />
+              @if (userForm.get('lastName')?.invalid && userForm.get('lastName')?.touched) {
+                <span class="error-text">Lastname is required</span>
+              }
+            } @else {
+              <p class="readonly-field">{{ currentUser()?.lastName }}</p>
+            }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+            <div class="input-with-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+            </div>
+            <p class="readonly-field email-field">
+              {{ currentUser()?.email }}
+            </p>
+        </div>
+
+        <div class="form-group">
+          <label>Roles</label>
+          @if (!editing()) {
+            <div class="roles-display">
+              <span class="role-badge">
+                {{ currentUser()?.roleName }}
+              </span>
+            </div>
+          } @else {
+            <div class="roles-management">
+              <div class="roles-checkboxes">
+                @for (roleName of availableRoles(); track roleName) {
+                  <label class="checkbox-item">
+                    <input
+                      type="checkbox"
+                      [checked]="selectedRole() === roleName"
+                      (change)="onRoleToggle(roleName, $event)"
+                    />
+
+                    <span class="role-label">{{ roleName }}</span>
+                  </label>
+                }
+              </div>
+              <small class="help-text">
+                ⚠️ At least one role must be selected
+              </small>
+            </div>
+          }
+        </div>
+
+        <div class="form-group">
+          <label>Account Status</label>
+          <span
+            class="status-badge"
+            [class.active]="currentUser()?.active"
+            [class.inactive]="!currentUser()?.active"
+          >
+
+            @if (currentUser()?.active) {
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              Active
+            } @else {
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+              </svg>
+              Inactive
+            }
+          </span>
+        </div>
+
+        @if (editing()) {
+          <div class="form-actions">
+            <button
+              type="button"
+              (click)="toggleEdit()"
+              class="btn btn-cancel"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="btn btn-save"
+              [disabled]="userForm.invalid"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+              </svg>
+              Save Changes
+            </button>
+          </div>
+        }
+      </form>
+
+      @if (!editing()) {
+        <div class="action-section">
+          @if (!currentUser()?.active) {
+            <div>
+              <button
+                type="button"
+                (click)="quitOtherOrOther()"
+                class="btn btn-activate"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                Activate User
+              </button>
+            </div>
+
+          } @else {
+            <button
+              type="button"
+              (click)="quitOtherOrOther()"
+              [disabled]="!canEditUser()"
+              [class.disabled]="!canEditUser()"
+              class="btn btn-deactivate"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+              </svg>
+              Deactivate User
+            </button>
+          }
+        </div>
+      }
+    }
+  </div>
+</div>

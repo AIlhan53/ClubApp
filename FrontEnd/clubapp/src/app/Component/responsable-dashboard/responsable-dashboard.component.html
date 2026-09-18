@@ -1,0 +1,117 @@
+<app-navbar></app-navbar>
+
+<div class="dashboard-container">
+  <div class="dashboard-content">
+
+    <h2>Welcome to the Dashboard</h2>
+
+    @if (clubs().length !== 0) {
+      <div class="btn">
+        <a href="/responsable/club/addClub" class="btn btn-primary">
+          Create new club
+        </a>
+      </div>
+    }
+
+    <!-- Store Preview -->
+    <div class="recent-stores">
+      <h3>Your Clubs</h3>
+
+      @if (loading()) {
+        <div class="loading">
+          <p>Loading...</p>
+        </div>
+      }
+      @if (!loading() && error()) {
+        <div class="error-message">
+          <p>{{ error() }}</p>
+        </div>
+      }
+      <!-- No club -->
+      @if (!loading() && clubs().length === 0) {
+        <div class="empty-state">
+          <p>No club has been created yet</p>
+          <a href="/responsable/club/addClub" class="btn btn-primary">
+            Create my first club
+          </a>
+        </div>
+      }
+
+      <!-- Club Grid -->
+      @if (!loading() && !error() && clubs().length > 0) {
+        <div class="stores-list">
+          @for (club of paginatedClubs(); track club.id) {
+            <div
+              class="store-card"
+              [routerLink]="['/responsable/club',club.id]">
+              <!-- Store Header -->
+              <div class="store-header">
+                <div class="store-info">
+                  <!-- member count Badge -->
+                  <div class="store-info">
+                    <h3>{{ club.clubName }}</h3>
+                    <p class="address">Member :  {{ club.memberCount }}</p>
+                  </div>
+
+                  <div class="stat-card-row">
+                    <div
+                      class="stat-card stat-card-sm"
+                      [routerLink]="['/responsable/club/member', club.id]"
+                      (click)="$event.stopPropagation()"
+                      style="cursor: pointer;"
+                    >
+                      <div class="stat-icon">👥</div>
+                      <div class="stat-content">
+                        <h3>My Members</h3>
+                        <p>View the complete members list</p>
+                      </div>
+                    </div>
+
+                    <div
+                      class="stat-card stat-card-sm"
+                      [routerLink]="['/responsable/club/tournament', club.id]"
+                      (click)="$event.stopPropagation()"
+                      style="cursor: pointer;"
+                    >
+                      <!-- View Tournaments Button -->
+                      <div class="stat-icon">🏆</div>
+                      <div class="stat-content">
+                        <h3>My Tournaments</h3>
+                        <p>View the complete tournament list</p>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Pagination -->
+        @if (totalPages() > 1) {
+          <div class="pagination">
+            <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage() === 1">
+              Previous
+            </button>
+
+            <div class="pagination-pages">
+              @for (page of pageNumbers(); track page) {
+                <button
+                  class="pagination-page"
+                  [class.active]="page === currentPage()"
+                  (click)="goToPage(page)">
+                  {{ page }}
+                </button>
+              }
+            </div>
+
+            <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage() === totalPages()">
+              Next
+            </button>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>

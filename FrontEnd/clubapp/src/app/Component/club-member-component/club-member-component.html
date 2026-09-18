@@ -1,0 +1,100 @@
+<app-navbar></app-navbar>
+
+<div class="abonnes-container">
+  <div class="abonnes-header">
+    <h2>Members</h2>
+    <button class="btn-back" (click)="goBack()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      Back to Dashboard
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading members...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error() && !loading()) {
+    <div class="error-state">
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <p>{{ error() }}</p>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!loading() && !error() && members.length === 0) {
+    <div class="empty-state">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.5">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+      <h3>No member</h3>
+    </div>
+  }
+
+  <!-- Subscribers List -->
+  @if (!loading() && !error() && members.length > 0) {
+    <div class="abonnes-content">
+      <div class="stats-bar">
+        <div class="stat">
+          <span class="stat-number">{{ members.length }}</span>
+          <span class="stat-label">Active Members</span>
+        </div>
+      </div>
+
+      <div class="abonnes-list-scroll">
+        <div class="abonnes-list">
+          @for (member of paginatedMembers(); track member) {
+            <div class="abonne-card">
+              <div class="abonne-avatar">
+                {{ member.firstName.charAt(0) }}{{ member.lastName.charAt(0) }}
+              </div>
+              <div class="abonne-info">
+                <h4>{{ member.firstName }} {{ member.lastName }}</h4>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      @if (totalPages() > 1) {
+        <div class="pagination">
+          <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage() === 1">
+            Previous
+          </button>
+
+          <div class="pagination-pages">
+            @for (page of pageNumbers(); track page) {
+              <button
+                class="pagination-page"
+                [class.active]="page === currentPage()"
+                (click)="goToPage(page)">
+                {{ page }}
+              </button>
+            }
+          </div>
+
+          <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage() === totalPages()">
+            Next
+          </button>
+        </div>
+      }
+    </div>
+  }
+</div>

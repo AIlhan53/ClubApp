@@ -1,0 +1,124 @@
+<app-navbar></app-navbar>
+
+<div class="tournaments-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1>All Tournaments</h1>
+    <p class="subtitle">Play now to these all tournament !</p>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading tournaments...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error() && !loading()) {
+    <div class="error-state">
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <p>{{ error() }}</p>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!loading() && !error() && tournaments().length === 0) {
+    <div class="empty-state">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.5">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      <h3>No Tournament Available</h3>
+      <p>There are no tournament available at the moment. Check back later!</p>
+    </div>
+  }
+
+  <!-- Tournament Grid -->
+  @if (!loading() && !error() && tournaments().length > 0) {
+    <div class="tournaments-grid-scroll">
+      <div class="tournaments-grid">
+        @for (tournament of paginatedTournaments(); track tournament.id) {
+          <div class="tournament-card" [class.subscribed]="tournament.joined">
+
+            <!-- Subscribed Badge -->
+            @if (tournament.joined) {
+              <div class="subscribed-badge">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span>Participating</span>
+              </div>
+            }
+
+            <!-- Tournament Header -->
+            <div class="tournament-header">
+              <div class="tournament-info">
+                <h3>{{ tournament.tournamentName }}</h3>
+              </div>
+            </div>
+
+            <!-- Info Blocks -->
+            <div class="info-block">
+              <span class="info-label">Description</span>
+              <p class="info-value">{{ tournament.tournamentDescription }}</p>
+            </div>
+
+            <div class="info-block">
+              <span class="info-label">Club</span>
+              <p class="info-value">{{ tournament.clubName }}</p>
+            </div>
+
+            <div class="info-block">
+              <span class="info-label">Date</span>
+              <p class="info-value">{{ tournament.tournamentDate }}</p>
+            </div>
+
+            <div class="info-block">
+              <span class="info-label">Status</span>
+              <p class="info-value">
+                @if (tournament.joined) {
+                  You are participating to this tournament
+                } @else {
+                  You are not participating to this tournament
+                }
+              </p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage() === 1">
+          Previous
+        </button>
+
+        <div class="pagination-pages">
+          @for (page of pageNumbers(); track page) {
+            <button
+              class="pagination-page"
+              [class.active]="page === currentPage()"
+              (click)="goToPage(page)">
+              {{ page }}
+            </button>
+          }
+        </div>
+
+        <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage() === totalPages()">
+          Next
+        </button>
+      </div>
+    }
+  }
+</div>

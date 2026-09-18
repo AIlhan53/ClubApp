@@ -1,0 +1,68 @@
+<app-navbar></app-navbar>
+
+<div class="form-container">
+  <div class="form-content">
+    <h2>{{ isEditMode() ? 'Edit Club' : 'Add a New Club' }}</h2>
+
+    @if (error()) {
+      <div class="alert alert-error">
+        {{ error() }}
+      </div>
+    }
+    @if (success()) {
+      <div class="alert alert-success">
+        {{ success() }}
+      </div>
+    }
+
+    @if (loading()) {
+      <div class="loading">
+        <p>Loading...</p>
+      </div>
+    }
+    @if (!loading()) {
+      <form [formGroup]="clubForm" (ngSubmit)="saveClub()" class="magasin-form">
+
+        <!-- Tournament Information -->
+        <div class="form-section">
+          <h3>General Information</h3>
+
+          <div class="form-group">
+            <label for="name">Club name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              formControlName="clubName"
+              placeholder="Kaiser reign"
+              class="form-control"
+              [class.error]="clubForm.get('clubName')?.invalid && clubForm.get('clubName')?.touched"/>
+
+            @if (clubForm.get('clubName')?.invalid && clubForm.get('clubName')?.touched) {
+              <span class="error-text"></span>
+            }
+          </div>
+
+        </div>
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" [disabled]="clubForm.invalid || loading()">
+            {{ isEditMode() ? '✏️ Update' : '➕ Create Club' }}
+          </button>
+          <button type="button" (click)="reset()" class="btn btn-secondary">
+            🔄 Reset
+          </button>
+
+          @if(isEditMode()){
+            <button type="button" (click)="deleteClub(clubId()!)" class="btn btn-delete">
+              Delete club
+            </button>
+          }
+          <button type="button" (click)="cancel()" class="btn btn-cancel">
+            ❌ Cancel
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+</div>
